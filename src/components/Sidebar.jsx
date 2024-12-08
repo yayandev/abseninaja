@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -59,6 +58,14 @@ const Sidebar = () => {
         </div>
       </div>
 
+      {/* Backdrop */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+          onClick={toggleSidebar}
+        ></div>
+      )}
+
       {/* Sidebar */}
       <div
         className={`fixed inset-y-0 left-0 z-30 w-64 bg-gray-800 text-white transition-transform duration-300 ease-in-out transform ${
@@ -71,7 +78,7 @@ const Sidebar = () => {
               AbseninAja
             </Link>
             <button
-              className="w-max bg-gray-800 text-white p-2 rounded-md"
+              className="w-max md:hidden bg-gray-800 text-white p-2 rounded-md"
               onClick={toggleSidebar}
             >
               <svg
