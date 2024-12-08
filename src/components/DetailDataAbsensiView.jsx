@@ -110,118 +110,122 @@ const DetailDataAbsensiView = () => {
           Cetak PDF
         </button>
       </div>
-      <div className="w-full bg-white p-3 rounded">
-        <h3 className="font-semibold text-lg">Detail Data Absensi</h3>
-        <div className="overflow-x-auto">
-          <table className="table-auto">
-            <tbody>
-              <tr>
-                <th className="text-start p-2">Nama Absensi</th>
-                <th className="text-start p-2">:</th>
-                <th className="text-start p-2">{detail?.name || "N/A"}</th>
-              </tr>
+      <div className="space-y-3 w-full" ref={contentRef}>
+        <div className="w-full bg-white p-3 rounded">
+          <h3 className="font-semibold text-lg">Detail Data Absensi</h3>
+          <div className="overflow-x-auto">
+            <table className="table-auto">
+              <tbody>
+                <tr>
+                  <th className="text-start p-2">Nama Absensi</th>
+                  <th className="text-start p-2">:</th>
+                  <th className="text-start p-2">{detail?.name || "N/A"}</th>
+                </tr>
 
-              <tr>
-                <th className="text-start p-2">Token Absensi</th>
-                <th className="text-start p-2">:</th>
-                <th className="text-start p-2">{detail?.token || "N/A"}</th>
-              </tr>
-              <tr>
-                <th className="text-start p-2">Status</th>
-                <th className="text-start p-2">:</th>
-                <th className="text-start p-2">
-                  <span
-                    className={`px-2 py-1 rounded-full  ${
-                      Math.floor(Date.now() / 1000) >= detail?.closedAt.seconds
-                        ? "bg-red-200 text-red-800"
-                        : "bg-green-200 text-green-800"
-                    }`}
-                  >
-                    {Math.floor(Date.now() / 1000) >= detail?.closedAt.seconds
-                      ? "Closed"
-                      : "Open"}
-                  </span>
-                </th>
-              </tr>
-              <tr>
-                <th className="text-start p-2">Waktu Buat</th>
-                <th className="text-start p-2">:</th>
-                <th className="text-start p-2">
-                  {new Date(
-                    detail?.createdAt.seconds * 1000
-                  ).toLocaleString() || "N/A"}
-                </th>
-              </tr>
-              <tr>
-                <th className="text-start p-2">Waktu Tutup</th>
-                <th className="text-start p-2">:</th>
-                <th className="text-start p-2">
-                  {new Date(detail?.closedAt.seconds * 1000).toLocaleString() ||
-                    "N/A"}
-                </th>
-              </tr>
-              <tr>
-                <th className="text-start p-2">Link Absensi</th>
-                <th className="text-start p-2">:</th>
-                <th className="text-start p-2">
-                  <Link
-                    className="text-sm text-blue-500"
-                    target="_blank"
-                    href={`${process.env.NEXT_PUBLIC_BASE_URL}/links/${detail?.userId}/${detail?.id}`}
-                  >
-                    {process.env.NEXT_PUBLIC_BASE_URL}/links/{detail?.userId}/
-                    {detail?.id}
-                  </Link>
-                </th>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div className="w-full bg-white p-3 rounded space-y-3">
-        <h3 className="text-lg font-semibold">Data Absensi</h3>
-        <div className="overflow-x-auto bg-white rounded-lg" ref={contentRef}>
-          <table className="min-w-full table-auto">
-            <thead className="bg-blue-500 text-white">
-              <tr>
-                <th className="py-3 px-4 text-left">#</th>
-                <th className="py-3 px-4 text-left">Nama</th>
-                <th className="py-3 px-4 text-left">No Identitas</th>
-                <th className="py-3 px-4 text-left">Kehadiran</th>
-              </tr>
-            </thead>
-            <tbody>
-              {dataAbsensi?.map((absensi, index) => (
-                <tr key={absensi.id}>
-                  <td className="p-2">{index + 1}</td>
-                  <td className="p-2">{absensi.nama || "N/A"}</td>
-                  <td className="p-2">{absensi.noIdentitas || "N/A"}</td>
-                  <td className="p-2 flex items-center">
-                    <span
-                      className={`px-2 py-1 rounded-full flex items-center justify-center w-max ${
-                        absensi.kehadiran === "hadir"
-                          ? "bg-green-200 text-green-800" // Hadir
-                          : absensi.kehadiran === "ijin"
-                          ? "bg-yellow-200 text-yellow-800" // Ijin
-                          : absensi.kehadiran === "sakit"
-                          ? "bg-red-200 text-red-800" // Sakit
-                          : "bg-gray-200 text-gray-800" // Default jika tidak ada status
+                <tr>
+                  <th className="text-start p-2">Token Absensi</th>
+                  <th className="text-start p-2">:</th>
+                  <th className="text-start p-2">{detail?.token || "N/A"}</th>
+                </tr>
+                <tr>
+                  <th className="text-start p-2">Status</th>
+                  <th className="text-start p-2">:</th>
+                  <th className="text-start p-2">
+                    <div
+                      className={`w-max px-2 py-1 rounded-full  ${
+                        Math.floor(Date.now() / 1000) >=
+                        detail?.closedAt.seconds
+                          ? "bg-red-200 text-red-800"
+                          : "bg-green-200 text-green-800"
                       }`}
                     >
-                      {absensi.kehadiran === "hadir"
-                        ? "Hadir"
-                        : absensi.kehadiran === "ijin"
-                        ? "Ijin"
-                        : absensi.kehadiran === "sakit"
-                        ? "Sakit"
-                        : "Tidak Diketahui"}
-                    </span>
-                  </td>
+                      {Math.floor(Date.now() / 1000) >= detail?.closedAt.seconds
+                        ? "Closed"
+                        : "Open"}
+                    </div>
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+                <tr>
+                  <th className="text-start p-2">Waktu Buat</th>
+                  <th className="text-start p-2">:</th>
+                  <th className="text-start p-2">
+                    {new Date(
+                      detail?.createdAt.seconds * 1000
+                    ).toLocaleString() || "N/A"}
+                  </th>
+                </tr>
+                <tr>
+                  <th className="text-start p-2">Waktu Tutup</th>
+                  <th className="text-start p-2">:</th>
+                  <th className="text-start p-2">
+                    {new Date(
+                      detail?.closedAt.seconds * 1000
+                    ).toLocaleString() || "N/A"}
+                  </th>
+                </tr>
+                <tr>
+                  <th className="text-start p-2">Link Absensi</th>
+                  <th className="text-start p-2">:</th>
+                  <th className="text-start p-2">
+                    <Link
+                      className="text-sm text-blue-500"
+                      target="_blank"
+                      href={`${process.env.NEXT_PUBLIC_BASE_URL}/links/${detail?.userId}/${detail?.id}`}
+                    >
+                      {process.env.NEXT_PUBLIC_BASE_URL}/links/{detail?.userId}/
+                      {detail?.id}
+                    </Link>
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="w-full bg-white p-3 rounded space-y-3">
+          <h3 className="text-lg font-semibold">Data Absensi</h3>
+          <div className="overflow-x-auto bg-white rounded-lg">
+            <table className="min-w-full table-auto">
+              <thead className="bg-blue-500 text-white">
+                <tr>
+                  <th className="py-3 px-4 text-left">#</th>
+                  <th className="py-3 px-4 text-left">Nama</th>
+                  <th className="py-3 px-4 text-left">No Identitas</th>
+                  <th className="py-3 px-4 text-left">Kehadiran</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dataAbsensi?.map((absensi, index) => (
+                  <tr key={absensi.id}>
+                    <td className="p-2">{index + 1}</td>
+                    <td className="p-2">{absensi.nama || "N/A"}</td>
+                    <td className="p-2">{absensi.noIdentitas || "N/A"}</td>
+                    <td className="p-2 flex items-center">
+                      <div
+                        className={`px-2 py-1 rounded-full flex items-center justify-center w-max ${
+                          absensi.kehadiran === "hadir"
+                            ? "bg-green-200 text-green-800" // Hadir
+                            : absensi.kehadiran === "ijin"
+                            ? "bg-yellow-200 text-yellow-800" // Ijin
+                            : absensi.kehadiran === "sakit"
+                            ? "bg-red-200 text-red-800" // Sakit
+                            : "bg-gray-200 text-gray-800" // Default jika tidak ada status
+                        }`}
+                      >
+                        {absensi.kehadiran === "hadir"
+                          ? "Hadir"
+                          : absensi.kehadiran === "ijin"
+                          ? "Ijin"
+                          : absensi.kehadiran === "sakit"
+                          ? "Sakit"
+                          : "Tidak Diketahui"}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
