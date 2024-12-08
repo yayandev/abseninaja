@@ -11,6 +11,7 @@ import {
   doc,
   setDoc,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid"; // Import UUID generator
 import Swal from "sweetalert2";
@@ -110,16 +111,17 @@ export const AbsensiProvider = ({ children }) => {
 
     // Jika pengguna memilih "Ya, tutup!", lanjutkan dengan proses penutupan
     if (result.isConfirmed) {
-      Swal.showLoading(); // Menampilkan loading
-
       try {
+        Swal.showLoading(); // Menampilkan loading
         // Mendapatkan referensi dokumen berdasarkan id
         const docRef = doc(db, `data/${user?.uid}/links`, id);
-
+        const now = new Date();
+        const seconds = Math.floor(now.getTime() / 1000); // Waktu dalam detik
+        const nanoseconds = now.getMilliseconds() * 1000000;
         // Memperbarui field status menjadi 'Close' dan menambahkan timestamp untuk 'closedAt'
         await updateDoc(docRef, {
           status: "Close",
-          closedAt: serverTimestamp(), // Set timestamp untuk 'closedAt'
+          closedAt: { seconds, nanoseconds }, // Set timestamp untuk 'closedAt'
         });
 
         // Menampilkan notifikasi berhasil
@@ -128,13 +130,32 @@ export const AbsensiProvider = ({ children }) => {
         // Menampilkan error jika gagal
         Swal.fire("Gagal!", "Error mengupdate data: " + error.message, "error");
       }
-    } else {
-      // Jika pengguna memilih "Batal", tampilkan notifikasi pembatalan
-      Swal.fire("Dibatalkan", "Proses penutupan link dibatalkan.", "info");
     }
   };
   const open = async (id) => {};
-  const trash = async (id) => {};
+  const trash = async (id) => {
+    const result = await Swal.fire({
+      title: "Apakah Anda yakin?",
+      text: "Setelah link dihapus, Link tidak bisa digunakan lagi!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Ya, tutup!",
+      cancelButtonText: "Batal",
+      reverseButtons: true, // Menyusun tombol konfirmasi di kanan, batal di kiri
+    });
+
+    if (result.isConfirmed) {
+      Swal.showLoading();
+
+      try {
+        const docRef = doc(db, `data/${user?.uid}/links`, id);
+        await deleteDoc(docRef);
+        Swal.fire("Berhasil!", "Link berhasil dihapus!", "success");
+      } catch (error) {
+        Swal.fire("Gagal!", "Error menghapus data: " + error.message, "error");
+      }
+    }
+  };
   const edit = async (id) => {};
 
   return (

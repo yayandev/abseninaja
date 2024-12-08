@@ -34,6 +34,11 @@ export const AuthProvider = ({ children }) => {
       onAuthStateChanged(auth, (user) => {
         if (user) {
           setUser(user);
+          let accessToken = Cookies.get("accessToken");
+          if (!accessToken) {
+            let token = user?.accessToken;
+            Cookies.set("accessToken", token);
+          }
           setIsAuthenticated(true);
         } else {
           setUser(null);
